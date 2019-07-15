@@ -9,7 +9,7 @@ __copyright__ = "Copyright 2019, Brascontrol"
 __status__ = "Development"
 
 LOG_PATH = '/var/log/wtxi/'
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.DEBUG
 LOG_MAX_BYTES = 40 * (2 ** 20)
 LOG_COUNT = 25
 
