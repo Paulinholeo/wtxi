@@ -27,7 +27,7 @@ class MainClass(threading.Thread):
             except (psutil.NoSuchProcess,psutil.AcessDenied,psutil.ZombieProcess):
                 pass
         return False
-:
+
     def verifica(self):  
         file = os.path.exists("/var/run/txi/txi.pid")
         if  not file:. 
