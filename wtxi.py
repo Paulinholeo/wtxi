@@ -13,27 +13,38 @@ __status__ = "Development"
 TEMPO_MAX = 3650 #Tempo em segundos
 
 class MainClass(threading.Thread):
-    def __init__(self.localUm,localDois)
+    def __init__(self)
         self.die = False
         threading.Thread.__init__(self)
-        self.localUm = localUm
-        self.localDois - localDois
+
+    def verificaSeRodaProcesso(self,nomeProcesso):
+        for proc in psutil.process_iter():
+            try:
+                if nomeProcesso.lower() in proc.name().lower():
+                    return True
+            except (psutil.NoSuchProcess,psutil.AcessDenied,psutil.ZombieProcess):
+                pass
+        return False
 
     def verifica(self):  
-        file = os.path.exists(self.localUm)
+        file = os.path.exists("/var/run/txi/txi.pid")
         if  not file:. 
-            os.system(self.localDois)
+            os.system('/home/bri7000/bricap/txi &')
 
     def run(self):
         while not self.die:
             self.verifica()
-            time.sleep(10)  
-            logger.info(' >>>> Thead Executada')
+            logger.debug('bricapd está rodando agora')
+            if self.verificaSeRodaProcesso('bricapd'):
+                logger.debug('bricapd está rodando agora')
+            else:
+                logger.debug('bricapd não está rodando')
+                os.system('/home/bri7000/bricap/bricapd &')
 
     def join(self):
         self.die = True
         super().join()
-        logger.info(' >>>> Falha ao executar Thread' )
+        logger.info('Houve uma FALHA ao executar Thread')
 
 def leArquivo():
     f = open('/var/run/txi/tx.txi','r')
@@ -51,17 +62,15 @@ def verificaTempo():
         return True
 
 def main():
-    verificaTxi = MainClass('/var/run/txi/txi.pid','/home/bri7000/bricap/txi &')
-    verificaBri = MainClass('','')
+    verificaTxi = MainClass()
     verificaTxi.start()
-    veriicaBri.start()
     while True:
         ctempo= str(datetime.timedelta(seconds=TEMPO_MAX))    
         tempo = datetime.datetime.now()
-        logger.info(str(tempo)+' >>>> Verificando a cada ' + ctempo +' (hh:mm:ss)')
+        logger.info(str(tempo)+' >>>> Verificando a cada ' + ctempo +' (hh:mm:ss) \n')
         teste = verificaTempo()
         if not teste:
-            logger.info(str(tempo)+' >>>> REINICIANDO TXI (pid=%d) ', os.getpid() )
+            logger.info(str(tempo)+' >>>> REINICIANDO TXI (pid=%d) \n', os.getpid() )
             os.system('killall txi')
         
 if __name__ == "__main__":  
