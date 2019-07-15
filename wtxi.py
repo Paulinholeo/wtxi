@@ -13,48 +13,27 @@ __status__ = "Development"
 TEMPO_MAX = 3650 #Tempo em segundos
 
 class MainClass(threading.Thread):
-    def __init__(self,name):
+    def __init__(self.localUm,localDois)
         self.die = False
         threading.Thread.__init__(self)
-        self.name = name
+        self.localUm = localUm
+        self.localDois - localDois
 
-    def verificaRun(self):  
-        file = os.path.exists("/var/run/txi/txi.pid")
+    def verifica(self):  
+        file = os.path.exists(self.localUm)
         if  not file:. 
-            os.system('/home/bri7000/bricap/txi &')
+            os.system(self.localDois)
 
     def run(self):
         while not self.die:
-            self.verificaRun()
-            time.sleep(10)
+            self.verifica()
+            time.sleep(10)  
             logger.info(' >>>> Thead Executada')
 
     def join(self):
         self.die = True
         super().join()
         logger.info(' >>>> Falha ao executar Thread' )
-
-class SecondClass(threading.Thread):
-    def __init__(self,name):
-        self.die = False       
-        threading.Thread.__init__(self)
-        self.name = name
-
-    def verificaBri(self):
-        file = os.path.exists()
-        if not file:
-            os.system()
-
-    def run(self):
-        while not self.die:
-            self.verificaBri()
-            time.sleep(10)
-            logger.info('>>>> Thread Executada')
-
-    def join(self):
-        self.die = True
-        super().join()
-        logger.info('>>>> Falha ao executar a Thread')
 
 def leArquivo():
     f = open('/var/run/txi/tx.txi','r')
@@ -72,8 +51,10 @@ def verificaTempo():
         return True
 
 def main():
-    m = MainClass('MainThread')
-    m.start()
+    verificaTxi = MainClass('/var/run/txi/txi.pid','/home/bri7000/bricap/txi &')
+    verificaBri = MainClass('','')
+    verificaTxi.start()
+    veriicaBri.start()
     while True:
         ctempo= str(datetime.timedelta(seconds=TEMPO_MAX))    
         tempo = datetime.datetime.now()
