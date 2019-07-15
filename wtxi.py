@@ -2,8 +2,9 @@ import os
 import time
 import threading
 import datetime
-
+import psutil
 import cfg 
+
 from logger import logger
 
 __author__ = "Paulo/Giovanne"
@@ -12,6 +13,7 @@ __status__ = "Development"
 
 TEMPO_MAX = 3650 #Tempo em segundos
 
+#Thread que roda as funções de verificação em segundo plano
 class MainClass(threading.Thread):
     def __init__(self)
         self.die = False
@@ -52,6 +54,7 @@ def leArquivo():
     f.close()
     return arquivo
 
+#Verifica se o arquivo é modificado no tempo determinado
 def verificaTempo():
     arquivoAntigo = leArquivo()
     time.sleep(TEMPO_MAX)
