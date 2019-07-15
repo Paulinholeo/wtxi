@@ -1,0 +1,13 @@
+[Unit]
+Description=Watchdog txi Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/python3 /opt/wtxi/wtxi.py
+ExecReload=/bin/true
+Restart=always
+
+[Install]
+RequiredBy=multi-user.target
