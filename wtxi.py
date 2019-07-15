@@ -6,8 +6,8 @@ import datetime
 import cfg 
 from logger import logger
 
-__author__ = "Paulo/Giovane"
-__copyright__ = "Copyright 2018, Brascontrol"
+__author__ = "Paulo/Giovanne"
+__copyright__ = "Copyright 2019, Brascontrol"
 __status__ = "Development"
 
 TEMPO_MAX = 3650 #Tempo em segundos
@@ -33,6 +33,28 @@ class MainClass(threading.Thread):
         self.die = True
         super().join()
         logger.info(' >>>> Falha ao executar Thread' )
+
+class SecondClass(threading.Thread):
+    def __init__(self,name):
+        self.die = False       
+        threading.Thread.__init__(self)
+        self.name = name
+
+    def verificaBri(self):
+        file = os.path.exists()
+        if not file:
+            os.system()
+
+    def run(self):
+        while not self.die:
+            self.verificaBri()
+            time.sleep(10)
+            logger.info('>>>> Thread Executada')
+
+    def join(self):
+        self.die = True
+        super().join()
+        logger.info('>>>> Falha ao executar a Thread')
 
 def leArquivo():
     f = open('/var/run/txi/tx.txi','r')

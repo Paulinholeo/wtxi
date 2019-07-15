@@ -4,8 +4,8 @@
 
 import logging
 
-__author__ = "Paulo/Giovane"
-__copyright__ = "Copyright 2018, Brascontrol"
+__author__ = "Paulo/Giovanne"
+__copyright__ = "Copyright 2019, Brascontrol"
 __status__ = "Development"
 
 LOG_PATH = '/var/log/wtxi/'
