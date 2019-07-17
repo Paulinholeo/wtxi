@@ -3,19 +3,21 @@ import time
 import threading
 import datetime
 import psutil
-import cfg 
 
+from VerifyBri import *
+
+import cfg 
 from logger import logger
 
 __author__ = "Paulo/Giovanne"
 __copyright__ = "Copyright 2019, Brascontrol"
 __status__ = "Development"
 
-TEMPO_MAX = 3650 #Tempo em segundos
+TEMPO_MAX = 10 #Tempo em segundos
 
-#Thread que roda as funções de verificação em segundo plano
+#Cria thread
 class MainClass(threading.Thread):
-    def __init__(self)
+    def __init__(self):
         self.die = False
         threading.Thread.__init__(self)
 
@@ -24,29 +26,24 @@ class MainClass(threading.Thread):
             try:
                 if nomeProcesso.lower() in proc.name().lower():
                     return True
-            except (psutil.NoSuchProcess,psutil.AcessDenied,psutil.ZombieProcess):
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 pass
         return False
 
-    def verifica(self):  
+    def verificaRun(self):
         file = os.path.exists("/var/run/txi/txi.pid")
-        if  not file:. 
+        if  not file:
             os.system('/home/bri7000/bricap/txi &')
 
     def run(self):
         while not self.die:
-            self.verifica()
-            logger.debug('bricapd está rodando agora')
-            if self.verificaSeRodaProcesso('bricapd'):
-                logger.debug('bricapd está rodando agora')
-            else:
-                logger.debug('bricapd não está rodando')
-                os.system('/home/bri7000/bricap/bricapd &')
+            self.verificaRun()
+            time.sleep(11)
+
 
     def join(self):
-        self.die = True
+        logger.debug("\nOcorreu falha ao executar Thread")
         super().join()
-        logger.info('Houve uma FALHA ao executar Thread')
 
 def leArquivo():
     f = open('/var/run/txi/tx.txi','r')
@@ -54,7 +51,6 @@ def leArquivo():
     f.close()
     return arquivo
 
-#Verifica se o arquivo é modificado no tempo determinado
 def verificaTempo():
     arquivoAntigo = leArquivo()
     time.sleep(TEMPO_MAX)
@@ -65,18 +61,20 @@ def verificaTempo():
         return True
 
 def main():
-    verificaTxi = MainClass()
+    verificaTxi= MainClass()
+    verificaBri = SecondClass()
+    verificaBri.start()
     verificaTxi.start()
     while True:
         ctempo= str(datetime.timedelta(seconds=TEMPO_MAX))    
         tempo = datetime.datetime.now()
-        logger.info(str(tempo)+' >>>> Verificando a cada ' + ctempo +' (hh:mm:ss) \n')
+        logger.info('\033[36m'+str(tempo)+' >>>> Vericando a cada ' + ctempo +'\033[0;0m\n')
         teste = verificaTempo()
         if not teste:
-            logger.info(str(tempo)+' >>>> REINICIANDO TXI (pid=%d) \n', os.getpid() )
+            logger.info('\n\033[36m'+str(tempo)+' >>>> REINICIANDO TXI (pid=%d)'+'\033[0;0m\n', os.getpid() )
             os.system('killall txi')
         
-if __name__ == "__main__":  
+if __name__ == "__main__":
     main()
     
     
