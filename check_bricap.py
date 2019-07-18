@@ -37,7 +37,6 @@ class SecondClass(threading.Thread):
         with self.lock:
             return self.conta
 
-
     #Retorna o tamanho do arquivo
     def convert_bytes(self,num):
         for x in ['bytes', 'kb', 'MB', 'GB']:
@@ -84,8 +83,10 @@ class SecondClass(threading.Thread):
     def verificaVersao(self,arquivo):
         if len(arquivo[0]) == 22:
             return 0
-        if len(arquivo[0]) == 24:
+        elif len(arquivo[0]) == 24:
             return 1
+        else:
+            return 2
 
     #Retorna encode
     def recebeEncode(self):
@@ -97,14 +98,20 @@ class SecondClass(threading.Thread):
 
     #Retorna nome do arquivo de acordo com sua versão
     def nomeArquivo(self,versao):
-        hora = str(datetime.datetime.now().strftime('%H'))
-        minuto = str(datetime.datetime.now().strftime('%M'))
+        if versao == 2:
+            logger.debug('Arquivo Inválido')
 
-        if versao == 0:
-            filename = self.recebeEncode()+self.data()+hora+'.txt'
-            return filename
-        elif versao == 1:
-            filename = self.recebeEncode()+self.data()+hora+minuto+'.txt'
+        elif versao == 1 or versao == 0:
+            path = self.caminho()+self.data()+'/'
+            arquivos = list(os.listdir(path))
+            nome = sorted(arquivos)
+
+            if (nome[-1][0:3] == 'BRI') and (nome[-1][8:16] == self.data()):
+                return nome[-1]
+            else:
+                logger.debug('Arquivo Inválido')
+        else:
+            logger.debug('Arquivo Inválido')
     
     #Verifica se houve alteração de arquivo
     def verificaBricap(self):
