@@ -17,6 +17,7 @@ class SecondClass(threading.Thread):
         threading.Thread.__init__(self)
         self.conta = 0
         self.contaReinicio = 0
+        self.arquivoAnterior = 0
         self.lock = threading.Lock()
 
     #Trava variavel para mante-la no valor anterior
@@ -27,6 +28,14 @@ class SecondClass(threading.Thread):
     def contadorReinicio(self):
         with self.lock:
             self.contaReinicio += 1
+    
+    def salvaArquivoAnterior(self):
+        with self.lock:
+            return self.arquivoAnterior
+
+    def recebeArquivoAnterior(self):
+        with self.lock:
+            return self.arquivoAnterior
 
     def recebeContadorReinicio(self):
         with self.lock:
@@ -90,7 +99,7 @@ class SecondClass(threading.Thread):
             else:
                 return 2
         except:
-            logger.debug('Não há arquivo no diretório')
+            logger.debug('Não há diretório no arquivo')
 
     #Retorna encode
     def recebeEncode(self):
@@ -124,16 +133,17 @@ class SecondClass(threading.Thread):
         arquivo = path+self.data()+'/'+nome
         logger.info('\033[37m'+'  >>>>  VERIFICANDO ARQUIVO: '+arquivo+'\033[0;0m')
 
-        a = self.file_size(file_path = arquivo)
-        time.sleep(4)
-        b = self.file_size(file_path = arquivo)
+        arquivoNovo = self.file_size(file_path = arquivo)
+        print(self.recebeArquivoAnterior())
 
-        if self.compara(a,b):
+        if self.compara(arquivoNovo,self.recebeArquivoAnterior()):
             logger.debug('\033[32m'+'O arquivo está alterando'+'\033[0;0m')
+            self.arquivoAnterior = arquivoNovo
             self.conta = 0
             self.contaReinicio = 0
 
         else:
+            arquivoAnterior = arquivoNovo
             logger.debug('\033[31m'+'O arquivo não está alterando'+'\033[0;0m')
             self.contador()
             if self.recebeContador() == 5:
@@ -156,3 +166,4 @@ class SecondClass(threading.Thread):
 
     def join(self):
         super().join()
+                                
