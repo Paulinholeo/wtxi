@@ -22,11 +22,7 @@ class MainClass(threading.Thread):
 
     #Verifica se algum processo está rodando
     def verificaSeRodaProcesso(self,nomeProcesso):
-<<<<<<< HEAD
-        for proc in psutl.process_iter():
-=======
         for proc in psutil.process_iter():
->>>>>>> desenvolvimento
             try:
                 if nomeProcesso.lower() in proc.name().lower():
                     return True
@@ -43,16 +39,12 @@ class MainClass(threading.Thread):
     def run(self):
         while not self.die:
             self.verificaRun()
-<<<<<<< HEAD
-            logger.info('Verificando bricapd')
-=======
             logger.info('  >>>>  Verificando bricapd')
->>>>>>> desenvolvimento
 
             if self.verificaSeRodaProcesso('bricapd'):
                 logger.debug('bricapd está rodando no momento')
             else:
-                logger.debug('bricapd nao está rodando \n iniciando bricapd')
+                logger.debug('bricapd não está rodando \n iniciando bricapd')
                 os.system('/home/bri7000/bricap/bricapd &')
             
             time.sleep(11)
