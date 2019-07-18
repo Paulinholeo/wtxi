@@ -37,6 +37,7 @@ class SecondClass(threading.Thread):
         with self.lock:
             return self.conta
 
+
     #Retorna o tamanho do arquivo
     def convert_bytes(self,num):
         for x in ['bytes', 'kb', 'MB', 'GB']:
@@ -81,18 +82,21 @@ class SecondClass(threading.Thread):
 
     #Mede tamanho do nome do arquivo, para verificar sua versão
     def verificaVersao(self,arquivo):
-        if len(arquivo[0]) == 22:
-            return 0
-        elif len(arquivo[0]) == 24:
-            return 1
-        else:
-            return 2
+        try:
+            if len(arquivo[0]) == 22:
+                return 0
+            elif len(arquivo[0]) == 24:
+                return 1
+            else:
+                return 2
+        except:
+            logger.debug('Não há arquivo no diretório')
 
     #Retorna encode
     def recebeEncode(self):
         path = open('/etc/bricap/bricap.conf')
         encode = int(path.readlines()[5][3:7])
-        path.close()
+        path.close()    
         return 'BRI'+('%05d' % encode)
         
 
@@ -105,20 +109,19 @@ class SecondClass(threading.Thread):
             path = self.caminho()+self.data()+'/'
             arquivos = list(os.listdir(path))
             nome = sorted(arquivos)
-
+        
             if (nome[-1][0:3] == 'BRI') and (nome[-1][8:16] == self.data()):
                 return nome[-1]
             else:
-                logger.debug('Arquivo Inválido')
+                logger.debug('Arquivo inválido')
         else:
-            logger.debug('Arquivo Inválido')
-    
+            logger.debug('Arquivo inválido')
+
     #Verifica se houve alteração de arquivo
     def verificaBricap(self):
         path = self.caminho()
         nome = self.nomeArquivo(self.verificaVersao(self.listaArquivos()))
         arquivo = path+self.data()+'/'+nome
-
         logger.info('\033[37m'+'  >>>>  VERIFICANDO ARQUIVO: '+arquivo+'\033[0;0m')
 
         a = self.file_size(file_path = arquivo)
@@ -153,4 +156,3 @@ class SecondClass(threading.Thread):
 
     def join(self):
         super().join()
-                                
