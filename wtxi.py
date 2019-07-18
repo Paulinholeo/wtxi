@@ -2,6 +2,7 @@ import os
 import time
 import threading
 import datetime
+import psutil
 
 from check_bricap import *
 
@@ -19,6 +20,17 @@ class MainClass(threading.Thread):
         self.die = False
         threading.Thread.__init__(self)
 
+    #Verifica se algum processo está rodando
+    def verificaSeRodaProcesso(self,nomeProcesso):
+        for proc in psutl.process_iter():
+            try:
+                if nomeProcesso.lower() in proc.name().lower():
+                    return True
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+        return False
+
+    #Verifica se txi está rodando
     def verificaRun(self):
         file = os.path.exists("/var/run/txi/txi.pid")
         if  not file:
@@ -27,6 +39,14 @@ class MainClass(threading.Thread):
     def run(self):
         while not self.die:
             self.verificaRun()
+            logger.info('Verificando bricapd')
+
+            if self.verificaSeRodaProcesso('bricapd'):
+                logger.debug('bricapd está rodando no momento')
+            else:
+                logger.debug('bricapd nao está rodando \n iniciando bricapd')
+                os.system('/home/bri7000/bricap/bricapd &')
+            
             time.sleep(11)
 
     def join(self):
