@@ -139,7 +139,7 @@ class SecondClass(threading.Thread):
                 
                 if self.contaReinicio == 10:
                     selfcontaReinicio = 0
-                    logger.info(' >>>>  Após %d tentativas... REINICIANDO COMPUTADOR',self.recebeContadorReinicio())
+                    logger.info(' >>>>  Após %d tentativas... REINICIANDO COMPUTADOR',self.contadorReinicio)
                     os.system('/sbin/reboot')
 
                 logger.info('  >>>>  REINICIANDO BRICAPD')
