@@ -7,8 +7,8 @@ from cfg import LOG_PATH, LOG_LEVEL, LOG_MAX_BYTES, LOG_COUNT
 
 """ WTXI centralized logger"""
 
-__author__ = "Paulo/Giovane"
-__copyright__ = "Copyright 2018, Brascontrol"
+__author__ = "Paulo/Giovanne"
+__copyright__ = "Copyright 2019, Brascontrol"
 __status__ = "Development"
 
 
