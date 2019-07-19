@@ -5,14 +5,13 @@ import datetime
 import psutil
 
 from check_bricap import *
+from logger import logger
 
 import cfg 
-from logger import logger
 
 __author__ = "Paulo/Giovanne"
 __copyright__ = "Copyright 2019, Brascontrol"
 __status__ = "Development"
-
 
 #Cria thread
 class MainClass(threading.Thread):
@@ -42,15 +41,15 @@ class MainClass(threading.Thread):
             logger.info('  >>>>  Verificando bricapd')
 
             if self.verificaSeRodaProcesso('bricapd'):
-                logger.debug('bricapd está rodando no momento')
+                logger.debug('  >>>>  bricapd está rodando no momento')
             else:
-                logger.debug('bricapd não está rodando \n iniciando bricapd')
+                logger.debug('  >>>>  bricapd não está rodando \n  >>>>  Iniciando bricapd')
                 os.system('/home/bri7000/bricap/bricapd &')
             
             time.sleep(11)
 
     def join(self):
-        logger.debug("\nOcorreu falha ao executar Thread")
+        logger.debug("\n  >>>>  Ocorreu falha ao executar Thread")
         super().join()
 
 def leArquivo():
