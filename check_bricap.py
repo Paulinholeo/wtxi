@@ -3,11 +3,14 @@ import sys
 import time
 import fnmatch
 import datetime
-import glob
 import threading
 import cfg
 
 from logger import logger
+
+__author__ = "Paulo/Giovanne"
+__copyright__ = "Copyright 2019, Brascontrol"
+__status__ = "Development"
 
 class SecondClass(threading.Thread):
     
@@ -28,25 +31,7 @@ class SecondClass(threading.Thread):
     def contadorReinicio(self):
         with self.lock:
             self.contaReinicio += 1
-    
-    def salvaArquivoAnterior(self):
-        with self.lock:
-            return self.arquivoAnterior
-
-    def recebeArquivoAnterior(self):
-        with self.lock:
-            return self.arquivoAnterior
-
-    def recebeContadorReinicio(self):
-        with self.lock:
-            return self.contaReinicio
-    
-    #Retorna valor da variavel de contagem
-    def recebeContador(self):
-        with self.lock:
-            return self.conta
-
-
+        
     #Retorna o tamanho do arquivo
     def convert_bytes(self,num):
         for x in ['bytes', 'kb', 'MB', 'GB']:
@@ -134,26 +119,30 @@ class SecondClass(threading.Thread):
         logger.info('\033[37m'+'  >>>>  VERIFICANDO ARQUIVO: '+arquivo+'\033[0;0m')
 
         arquivoNovo = self.file_size(file_path = arquivo)
-        print(self.recebeArquivoAnterior())
 
-        if self.compara(arquivoNovo,self.recebeArquivoAnterior()):
+        if self.compara(arquivoNovo,self.arquivoAnterior):
             logger.debug('\033[32m'+'O arquivo está alterando'+'\033[0;0m')
+            
             self.arquivoAnterior = arquivoNovo
             self.conta = 0
             self.contaReinicio = 0
 
         else:
             arquivoAnterior = arquivoNovo
-            logger.debug('\033[31m'+'O arquivo não está alterando'+'\033[0;0m')
+            logger.debug('\033[31m'+'  >>>>  O arquivo não está alterando'+'\033[0;0m')
+            
             self.contador()
-            if self.recebeContador() == 5:
+            
+            if self.conta == 5:
+                
                 self.contadorReinicio()
-                if self.recebeContadorReinicio() == 10:
+                
+                if self.contaReinicio == 10:
                     selfcontaReinicio = 0
-                    logger.info('Após %d tentativas... REINICIANDO COMPUTADOR',self.recebeContadorReinicio())
+                    logger.info(' >>>>  Após %d tentativas... REINICIANDO COMPUTADOR',self.recebeContadorReinicio())
                     os.system('/sbin/reboot')
 
-                logger.info('REINICIANDO BRICAPD')
+                logger.info('  >>>>  REINICIANDO BRICAPD')
                 os.system('/home/bri7000/bricap/bricapd -n&')
                 self.conta = 0
                 time.sleep(30)
@@ -166,4 +155,3 @@ class SecondClass(threading.Thread):
 
     def join(self):
         super().join()
-                                
